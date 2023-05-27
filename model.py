@@ -5,6 +5,13 @@ from TorchCRF import CRF
 
 class BiLstmCrf(nn.Module):
     def __init__(self,device, output_size, emb_size=100, hidden_dim=256):
+        """
+        模型的初始化方法
+        :param device: 当前使用的设备（'gpu'或'cpu'）
+        :param output_size: 输出的维度
+        :param emb_size: 编码的维度
+        :param hidden_dim: 隐含层的维度
+        """
         super(BiLstmCrf, self).__init__()
         self.hidden_dim = hidden_dim
         self.output_size = output_size

@@ -40,6 +40,12 @@ def get_f1(pred, label):
 
 
 def train(max_epoch, batch_size, save_path='data/model/model.pth'):
+    """
+    训练的函数
+    :param max_epoch: 最大训练轮数
+    :param batch_size: 每个batch的长度
+    :param save_path: 保存模型的路径
+    """
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     pre = Preprocess()
     train_corpus, train_tags = pre.preprocess_corpus('train.txt', 'train_TAG.txt', has_tag=True)

@@ -39,6 +39,13 @@ class Preprocess:
 
     @staticmethod
     def cut_corpus(corpus_list: list, tag_list: list = None, has_tag=False):
+        """
+        切分语料的方法
+        :param corpus_list: 待切分的语料list
+        :param tag_list: 传入corpus_list对应的标签列表
+        :param has_tag: 是否传入标签
+        :return: 切分后的语料（与标签）
+        """
         new_corpus_list = []
         new_tag_list = []
         # 遍历语料的每一行
@@ -60,6 +67,11 @@ class Preprocess:
             return new_corpus_list
 
     def word_to_id(self, corpus_list):
+        """
+        将字转换为对应向量的方法
+        :param corpus_list: 待转换的语料列表
+        :return: 转换后的向量
+        """
         id_list = []
         for sentence in corpus_list:
             id_sentence = []
@@ -72,6 +84,11 @@ class Preprocess:
         return id_list
 
     def tag_to_id(self, tag_list):
+        """
+        将标签转换为id的方法
+        :param tag_list: 待转换的标签列表
+        :return: 转换后的id列表
+        """
         id_list = []
         for sentence in tag_list:
             id_sentence = []
@@ -81,6 +98,13 @@ class Preprocess:
         return id_list
 
     def preprocess_corpus(self, corpus_name, tag_name='', has_tag=False):
+        """
+        读取语料并将其转换为id向量格式的方法
+        :param corpus_name: 语料名称
+        :param tag_name: 标签名称
+        :param has_tag: 是否传入标签
+        :return: 三维向量格式的语料以及三维id列表格式的标签
+        """
         corpus = self.read_corpus(corpus_name)
         tags = None
         if has_tag:

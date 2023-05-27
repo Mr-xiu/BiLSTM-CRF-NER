@@ -6,6 +6,11 @@ from preprocess import Preprocess
 
 # 根据训练所得模型，在测试集上进行实体抽取
 def predict(model_path, save_path):
+    """
+    在测试集上标注的函数
+    :param model_path: 模型的路径
+    :param save_path: 序列标注得到的标签文件存放的路径
+    """
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     pre = Preprocess()
     test_corpus = pre.preprocess_corpus('test.txt', has_tag=False)
