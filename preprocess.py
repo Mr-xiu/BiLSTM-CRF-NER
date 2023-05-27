@@ -87,8 +87,6 @@ class Preprocess:
             tags = self.read_corpus(tag_name)
             corpus, tags = self.cut_corpus(corpus, tags, has_tag)
 
-        else:
-            corpus = self.cut_corpus(corpus)
         corpus = self.word_to_id(corpus)
         if has_tag:
             tags = self.tag_to_id(tags)
