@@ -68,7 +68,7 @@ def train(max_epoch, batch_size, save_path='data/model/model.pth'):
         # 训练
         tqdm_obj = tqdm(enumerate(train_dataloader), total=len(train_dataloader))
         for i, (inputs, labels, lens) in tqdm_obj:
-            loss = model.forward(inputs.to(device), labels.to(device), lens, is_test=False)
+            loss = model.forward(inputs.to(device), labels.to(device), lens, is_predict=False)
             optimizer.zero_grad()
             loss.backward(torch.ones_like(loss))
             optimizer.step()
@@ -78,7 +78,6 @@ def train(max_epoch, batch_size, save_path='data/model/model.pth'):
             if (i + 1) % 1000 == 0:
                 loss_list.append(loss)
 
-
         # 验证
         print('开始验证...')
         with torch.no_grad():
@@ -86,7 +85,7 @@ def train(max_epoch, batch_size, save_path='data/model/model.pth'):
             label_list = []
             for i, (inputs, labels, lens) in enumerate(dev_dataloader):
                 # 预测的pred为list格式
-                pred = model.forward(inputs.to(device), labels.to(device), lens, is_test=True)
+                pred = model.forward(inputs.to(device), labels.to(device), lens, is_predict=True)
                 # 需要将labels也转换为list格式
                 labels = labels.tolist()
                 for j in range(len(pred)):
@@ -98,7 +97,7 @@ def train(max_epoch, batch_size, save_path='data/model/model.pth'):
 
             if epoch > 1:
                 # 提前终止
-                if f1_list[-2] > f1 and f1_list[-2] > 0.9:
+                if f1_list[-2] > f1 and f1_list[-2] > 0.94:
                     print('提前终止！！！')
                     break
             # 更新模型

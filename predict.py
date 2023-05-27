@@ -16,13 +16,14 @@ def predict(model_path, save_path):
     test_corpus = pre.preprocess_corpus('test.txt', has_tag=False)
     model = BiLstmCrf(device=device, output_size=len(pre.tag2id)).to(device)
     model.load_state_dict(torch.load(model_path, map_location=device))
+    # print(model)
     tag_list = []  # 标注结果的列表
     with torch.no_grad():
         for st in test_corpus:
             len_st = len(st)
             # 获取标签
             st = torch.tensor(st, dtype=torch.float32).unsqueeze(0).to(device)
-            pred = model.forward(st, None, [len_st], is_test=True)
+            pred = model.forward(st, None, [len_st], is_predict=True)
 
             st_tag = []
             for id in pred[0]:

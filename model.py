@@ -21,20 +21,20 @@ class BiLstmCrf(nn.Module):
         self.fc = nn.Linear(self.hidden_dim, self.output_size)
         self.crf = CRF(self.output_size)
 
-    def forward(self, x, target, sentence_len, is_test=False):
+    def forward(self, x, target, sentence_len, is_predict=False):
         """
         前向传播
         x: 输入的向量 [batch_size, sentence_len, embedding_size]
         target: 标签向量[batch_size, sentence_len]
         sentence_len: batch 中每个句子的长度 [batch_size]
-        is_test: 当前是否为训练，若为训练，返回的为loss，否则为解码的结果
+        is_predict: 当前是否为预测，若不为预测，返回的为loss，否则为解码的结果
         """
         mask = torch.tensor([[True if j < length else 0 for j in range(x.shape[1])]
                              for length in sentence_len], dtype=torch.bool).to(self.device)
         x, _ = self.lstm(x)
         x = self.fc(x)
 
-        if not is_test:
+        if not is_predict:
             loss = -self.crf.forward(x, target, mask=mask)
             return loss
         else:
