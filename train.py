@@ -60,23 +60,25 @@ def train(max_epoch, batch_size, save_path='data/model/model.pth'):
         print(f'第{epoch + 1}轮...')
         print('开始训练...')
         # 训练
-        for i, (inputs, labels, lens) in tqdm(enumerate(train_dataloader)):
+        tqdm_obj = tqdm(enumerate(train_dataloader), total=len(train_dataloader))
+        for i, (inputs, labels, lens) in tqdm_obj:
             loss = model.forward(inputs.to(device), labels.to(device), lens, is_test=False)
             optimizer.zero_grad()
             loss.backward(torch.ones_like(loss))
             optimizer.step()
-            # 每50个batch记录一次loss信息
-            if (i + 1) % 50 == 0:
-                loss = torch.sum(loss).item()
+            loss = torch.mean(loss).item()
+            tqdm_obj.set_postfix(loss=loss)
+            # 每256个batch记录一次loss信息
+            if (i + 1) % 1000 == 0:
                 loss_list.append(loss)
-                tqdm.set_postfix(loss=loss)
+
 
         # 验证
         print('开始验证...')
         with torch.no_grad():
             pred_list = []
             label_list = []
-            for i, (inputs, labels, lens) in tqdm(enumerate(dev_dataloader)):
+            for i, (inputs, labels, lens) in enumerate(dev_dataloader):
                 # 预测的pred为list格式
                 pred = model.forward(inputs.to(device), labels.to(device), lens, is_test=True)
                 # 需要将labels也转换为list格式
@@ -98,6 +100,17 @@ def train(max_epoch, batch_size, save_path='data/model/model.pth'):
                 os.remove(save_path)
             torch.save(model.state_dict(), save_path)
 
+    # 绘制loss图与f1图
+    plt.plot(loss_list)
+    plt.title('loss')
+    plt.savefig('data/imgs/loss.jpg')
+    plt.close()
+
+    plt.plot(f1_list)
+    plt.title('F1')
+    plt.savefig('data/imgs/F1.jpg')
+    plt.close()
+
 
 if __name__ == '__main__':
-    train(max_epoch=20, batch_size=64)
+    train(max_epoch=20, batch_size=512)
